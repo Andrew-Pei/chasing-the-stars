@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>逐梦星河 · 望远镜的辉煌足迹</title>
+<style>
+  :root{
+    --lav:#CBD0FF;
+    --lav-dim:#98a0e0;
+    --bg:#07070f;
+    --line:rgba(203,208,255,.18);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;background:var(--bg);overflow:hidden}
+  body{
+    font-family:"Microsoft YaHei","PingFang SC","Hiragino Sans GB","Source Han Sans SC",sans-serif;
+    color:#fff;-webkit-font-smoothing:antialiased;
+  }
+  #viewport{position:fixed;inset:0;background:#04040a;}
+  #stage{
+    position:absolute;left:50%;top:50%;width:1280px;height:720px;
+    transform:translate(-50%,-50%) scale(var(--scale,1));
+    background:var(--bg);overflow:hidden;
+    box-shadow:0 0 90px rgba(0,0,0,.9);
+  }
+  #stars{position:absolute;inset:0;width:100%;height:100%;z-index:0;opacity:.9}
+  .slide{
+    position:absolute;inset:0;z-index:1;opacity:0;pointer-events:none;
+    transition:opacity .6s cubic-bezier(.2,.7,.2,1), transform .9s cubic-bezier(.2,.7,.2,1);
+    transform:translateY(16px) scale(.99);
+  }
+  .slide::before{
+    content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+    background:
+      radial-gradient(120% 90% at 70% 0%, rgba(60,58,120,.20), transparent 60%),
+      radial-gradient(90% 70% at 10% 100%, rgba(36,52,110,.18), transparent 65%);
+  }
+  .slide.active{opacity:1;transform:none;pointer-events:auto;z-index:3}
+  .slide.leaving{opacity:0;transform:translateY(-10px) scale(1.01);z-index:2}
+  .slide.instant .build,.slide.instant .grow{transition:none!important}
+
+  /* ---------- 背景装饰 ---------- */
+  .bg-strip{position:absolute;top:0;left:0;right:0;height:190px;overflow:hidden;z-index:0;pointer-events:none}
+  .bg-strip img{width:100%;height:100%;object-fit:cover;object-position:center 32%;opacity:.5}
+  .bg-strip::after{content:"";position:absolute;inset:0;
+    background:linear-gradient(to bottom,rgba(6,7,16,.25) 0%,rgba(7,7,15,.72) 55%,rgba(7,7,15,1) 100%);}
+
+  /* ---------- 页眉 ---------- */
+  .head{position:absolute;left:64px;top:46px;right:64px;z-index:2}
+  .eyebrow{
+    font-size:11px;letter-spacing:.26em;color:var(--lav-dim);
+    display:flex;align-items:center;gap:10px;font-weight:600;
+  }
+  .eyebrow::before{content:"";width:22px;height:1px;background:var(--lav-dim)}
+  .head h2{font-size:30px;font-weight:700;letter-spacing:.04em;margin-top:13px;line-height:1.2}
+  .head h2.sm{font-size:26px}
+  .rule{width:54px;height:2px;background:var(--lav);margin-top:16px;border-radius:2px;box-shadow:0 0 16px rgba(203,208,255,.7)}
+
+  /* ---------- 入场 ---------- */
+  .enter{opacity:0}
+  .slide.active .enter{animation:enterUp .85s var(--d,0s) cubic-bezier(.2,.7,.2,1) both}
+  @keyframes enterUp{
+    from{opacity:0;transform:translateY(24px)}
+    to{opacity:1;transform:none}
+  }
+
+  /* ---------- 分步出现 ---------- */
+  .build{opacity:0;transform:translateY(22px);filter:blur(6px);
+    transition:opacity .62s cubic-bezier(.2,.7,.2,1),transform .75s cubic-bezier(.2,.7,.2,1),filter .6s}
+  .build.on{opacity:1;transform:none;filter:none}
+  .grow{transform:scaleX(0);transform-origin:left center;transition:transform 1.1s cubic-bezier(.2,.7,.2,1)}
+  .grow.on{transform:scaleX(1)}
+
+  /* ---------- 通用版式 ---------- */
+  .body{position:absolute;left:64px;right:64px;top:196px;bottom:70px;z-index:2}
+
+  .card{
+    background:linear-gradient(155deg,rgba(203,208,255,.075),rgba(203,208,255,.018));
+    border:1px solid var(--line);border-radius:16px;padding:24px 26px;position:relative;
+    backdrop-filter:blur(2px);
+  }
+  .card h3{font-size:20px;font-weight:700;letter-spacing:.02em}
+  .card p{font-size:14px;line-height:1.78;color:rgba(255,255,255,.72);margin-top:10px}
+  .card em{font-style:normal;color:var(--lav);font-weight:600}
+  .card strong{color:#fff;font-weight:700}
+
+  .fig{border-radius:14px;overflow:hidden;border:1px solid rgba(203,208,255,.16);
+    background:#0b0b16;box-shadow:0 18px 44px rgba(0,0,0,.5);position:relative}
+  .fig img{width:100%;height:100%;object-fit:cover;display:block}
+  .fig.plate{background:#fff;display:flex;align-items:center;justify-content:center}
+  .fig.plate img{object-fit:contain;width:100%;height:100%}
+  .figure{display:flex;flex-direction:column;gap:9px;height:100%;min-height:0;overflow:hidden}
+  .figure .fig{flex:1;min-height:0}
+  .cap{font-size:11.5px;color:rgba(255,255,255,.42);letter-spacing:.04em}
+
+  /* ---------- 封面 ---------- */
+  .cover-bg{position:absolute;inset:0;z-index:0}
+  .cover-bg img{width:100%;height:100%;object-fit:cover;animation:slowZoom 24s ease-in-out infinite alternate}
+  @keyframes slowZoom{from{transform:scale(1.02)}to{transform:scale(1.09)}}
+  .cover-veil{position:absolute;inset:0;z-index:1;
+    background:
+      linear-gradient(100deg,rgba(4,4,12,.88) 0%,rgba(5,5,16,.55) 42%,rgba(5,5,16,.12) 72%,rgba(5,5,16,.55) 100%),
+      radial-gradient(70% 60% at 20% 45%,rgba(46,52,120,.35),transparent 70%),
+      linear-gradient(to top,rgba(4,4,10,.85),transparent 40%)}
+  .cover-inner{position:absolute;left:96px;top:196px;z-index:2;width:720px}
+  .cover-inner .eyebrow{color:#aab2ff}
+  .cover-inner h1{font-size:76px;font-weight:700;letter-spacing:.1em;margin-top:22px;line-height:1.05;
+    text-shadow:0 6px 50px rgba(110,130,255,.45)}
+  .cover-rule{height:2px;width:300px;background:linear-gradient(90deg,var(--lav),rgba(203,208,255,0));margin:26px 0 20px;
+    transform-origin:left}
+  .cover-inner h2{font-size:27px;font-weight:400;letter-spacing:.22em;color:var(--lav)}
+  .cover-inner p{font-size:14.5px;line-height:2;color:rgba(255,255,255,.55);margin-top:22px}
+  .cover-hint{position:absolute;left:0;right:0;bottom:74px;text-align:center;z-index:2;
+    font-size:12px;letter-spacing:.16em;color:rgba(255,255,255,.45)}
+  .cover-hint b{color:var(--lav);font-weight:600}
+  .cover-inner h1{animation:glowPulse 6s ease-in-out infinite alternate}
+  @keyframes glowPulse{from{text-shadow:0 6px 40px rgba(110,130,255,.28)}to{text-shadow:0 8px 72px rgba(140,160,255,.62)}}
+
+  /* ---------- HUD ---------- */
+  .hud{position:absolute;left:64px;right:64px;bottom:28px;z-index:10;
+    display:flex;justify-content:space-between;align-items:flex-end;
+    font-size:11px;letter-spacing:.12em;color:rgba(255,255,255,.34);pointer-events:none}
+  .hud .brand{letter-spacing:.2em}
+  .hud .pageno{color:rgba(255,255,255,.55);letter-spacing:.16em}
+  .hud .pageno b{color:#fff;font-weight:600;font-size:13px}
+  .hud .pageno span{margin-left:12px;color:var(--lav-dim);letter-spacing:.1em}
+  .progress{position:absolute;left:0;bottom:0;height:2px;width:100%;background:rgba(255,255,255,.06);z-index:10}
+  .progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,rgba(203,208,255,.5),var(--lav));
+    box-shadow:0 0 12px rgba(203,208,255,.8);transition:width .55s cubic-bezier(.2,.7,.2,1)}
+  .ctrls{position:absolute;right:24px;top:20px;z-index:12;display:flex;gap:8px}
+  .ctrl{width:32px;height:32px;border-radius:9px;border:1px solid rgba(203,208,255,.14);
+    background:rgba(9,9,20,.45);color:rgba(255,255,255,.6);cursor:pointer;display:grid;place-items:center;
+    transition:.25s;backdrop-filter:blur(6px)}
+  .ctrl:hover{color:#fff;border-color:rgba(203,208,255,.5);background:rgba(30,30,60,.6)}
+  .ctrl svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.6}
+
+  /* ---------- 目录 ---------- */
+  .overlay{position:absolute;inset:0;z-index:20;background:rgba(5,6,14,.94);
+    backdrop-filter:blur(20px);opacity:0;visibility:hidden;transition:opacity .35s,visibility .35s;padding:48px 64px}
+  .overlay.show{opacity:1;visibility:visible}
+  .overlay .ov-head{display:flex;justify-content:space-between;align-items:flex-end}
+  .overlay .ov-head h2{font-size:24px;font-weight:700;letter-spacing:.1em}
+  .overlay .ov-head span{font-size:11px;letter-spacing:.24em;color:var(--lav-dim)}
+  .toc{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:26px}
+  .toc-item{border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:16px 18px;cursor:pointer;
+    transition:.22s;display:flex;gap:14px;align-items:baseline;background:rgba(255,255,255,.02)}
+  .toc-item:hover{border-color:rgba(203,208,255,.45);background:rgba(203,208,255,.07);transform:translateY(-2px)}
+  .toc-item.cur{border-color:rgba(203,208,255,.55);background:rgba(203,208,255,.1)}
+  .toc-item .n{font-size:12px;color:var(--lav-dim);letter-spacing:.12em;font-variant-numeric:tabular-nums}
+  .toc-item .t{font-size:15px;font-weight:600;letter-spacing:.02em}
+  .ov-foot{margin-top:24px;font-size:11px;letter-spacing:.14em;color:rgba(255,255,255,.35)}
+  .ov-foot b{color:rgba(255,255,255,.65);font-weight:600}
+
+  /* ---------- 黑屏 ---------- */
+  .blackout{position:absolute;inset:0;background:#000;z-index:25;opacity:0;visibility:hidden;transition:.3s;
+    display:grid;place-items:center;cursor:pointer}
+  .blackout.show{opacity:1;visibility:visible}
+  .blackout span{font-size:11px;letter-spacing:.3em;color:rgba(255,255,255,.18)}
+
+  /* ---------- 链接按钮 ---------- */
+  .chip{display:inline-flex;align-items:center;gap:8px;margin-top:14px;
+    font-size:12.5px;color:var(--lav);text-decoration:none;letter-spacing:.03em;
+    border:1px solid rgba(203,208,255,.3);border-radius:999px;padding:7px 14px;transition:.22s;
+    background:rgba(203,208,255,.06)}
+  .chip:hover{background:rgba(203,208,255,.16);border-color:rgba(203,208,255,.65);color:#fff}
+  .chip .arrow{font-size:11px;opacity:.8}
+
+  /* ---------- 页 2 历史 ---------- */
+  .two-col{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:minmax(0,1fr);gap:32px;height:100%;align-items:center}
+  .story{display:flex;gap:26px;align-items:center;height:auto;padding:26px}
+  .story .fig{width:196px;height:268px;flex:none}
+  .story .txt{flex:1;min-width:0}
+  .tag{font-size:10.5px;letter-spacing:.18em;color:var(--lav-dim);border:1px solid rgba(203,208,255,.24);
+    padding:4px 9px;border-radius:4px}
+  .story h3{font-size:22px;font-weight:700;margin:14px 0 10px}
+  .story p{font-size:13.5px;line-height:1.85;color:rgba(255,255,255,.72)}
+  .story p em{font-style:normal;color:var(--lav)}
+  .story p strong{color:#fff}
+
+  /* ---------- 页 3 折射 ---------- */
+  .lens-row{display:grid;grid-template-columns:310px 310px 1fr;grid-template-rows:180px;gap:24px;height:180px}
+  .lens-card{display:flex;flex-direction:column;justify-content:center;gap:14px;padding:20px 24px;overflow:hidden}
+  .lens-card .nm{font-size:20px;font-weight:700}
+  .lens-card .nm::after{content:"";display:block;width:26px;height:1px;background:var(--lav);margin-top:9px;opacity:.8}
+  .lens-card .fm{font-size:12.5px;line-height:1.9;color:rgba(255,255,255,.62);letter-spacing:.02em}
+  .lens-card .fm b{color:var(--lav);font-weight:600;margin:0 2px}
+  .split{display:grid;grid-template-columns:1.15fr 1fr 1.1fr;grid-template-rows:210px;gap:24px;height:210px;margin-top:20px}
+  .problem{display:flex;flex-direction:column;justify-content:center;padding:22px 26px}
+  .problem p{margin-top:12px}
+
+  /* ---------- 页 4 反射 / 卡片三列 ---------- */
+  .three{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:minmax(0,1fr);gap:24px;height:100%}
+  .tile{display:flex;flex-direction:column;padding:20px;overflow:hidden}
+  .tile .fig{height:186px;flex:none;margin-bottom:18px}
+  .tile h3{font-size:19px;display:flex;align-items:center;gap:9px}
+  .tile h3 .idx{font-size:11px;color:var(--lav-dim);font-weight:600;letter-spacing:.1em}
+  .tile p{font-size:13px;line-height:1.76}
+  .tile .chip{align-self:flex-start}
+
+  /* ---------- 页 5 折反射 / 竖排卡片 ---------- */
+  .side{display:grid;grid-template-columns:600px 1fr;grid-template-rows:minmax(0,1fr);gap:40px;height:100%}
+  .stack{display:flex;flex-direction:column;gap:16px;justify-content:center}
+  .stack .card{display:flex;gap:18px;align-items:flex-start;padding:20px 24px}
+  .stack h3{font-size:17px;white-space:nowrap}
+  .stack p{margin-top:6px;font-size:13px;line-height:1.72}
+  .icon{width:42px;height:42px;flex:none;border-radius:10px;border:1px solid rgba(203,208,255,.22);
+    display:grid;place-items:center;background:rgba(203,208,255,.07)}
+  .icon svg{width:20px;height:20px;stroke:var(--lav);fill:none;stroke-width:1.5}
+
+  /* ---------- 页 6/7 双图 ---------- */
+  .duo{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:minmax(0,1fr);gap:32px;height:100%}
+  .duo .figure{height:100%}
+  .duo .fig{flex:1;min-height:0}
+  .duo h3{font-size:16px;font-weight:700;margin-bottom:8px}
+  .duo p{font-size:13px;line-height:1.8;color:rgba(255,255,255,.7)}
+  .lead{position:absolute;left:64px;right:64px;top:180px;font-size:13px;letter-spacing:.06em;color:rgba(255,255,255,.5)}
+  .lead em{font-style:normal;color:var(--lav)}
+
+  /* ---------- 页 8-10 / 13 列表 ---------- */
+  .list-side{display:grid;grid-template-columns:1fr 452px;grid-template-rows:minmax(0,1fr);gap:44px;height:100%}
+  .rows{display:flex;flex-direction:column;justify-content:center}
+  .row{display:flex;gap:18px;padding:13px 0;border-bottom:1px solid rgba(255,255,255,.075)}
+  .row:last-child{border-bottom:none}
+  .row .n{font-size:20px;font-weight:700;color:var(--lav);opacity:.8;line-height:1.3;width:32px;flex:none;font-variant-numeric:tabular-nums}
+  .row h3{font-size:16px;font-weight:700;letter-spacing:.02em}
+  .row p{font-size:13px;line-height:1.72;color:rgba(255,255,255,.66);margin-top:4px}
+  .stat{position:absolute;right:16px;bottom:16px;text-align:right;z-index:2}
+  .stat b{font-size:30px;font-weight:700;color:#fff;letter-spacing:.02em;text-shadow:0 2px 20px #000}
+  .stat span{display:block;font-size:10.5px;letter-spacing:.18em;color:var(--lav);margin-top:2px}
+
+  /* ---------- 页 11 四宫格 ---------- */
+  .quad{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(2,minmax(0,1fr));gap:20px;height:100%}
+  .quad .card{display:flex;gap:20px;align-items:center;padding:24px 26px}
+  .quad .icon{width:46px;height:46px}
+  .quad h3{font-size:18px;margin-bottom:8px}
+  .quad p{font-size:13px;line-height:1.75;margin-top:0}
+
+  /* ---------- 页 12 时间线 ---------- */
+  .tl{position:absolute;left:64px;right:64px;top:264px;bottom:70px;display:grid;grid-template-columns:repeat(4,1fr);gap:26px}
+  .tl-line{position:absolute;left:64px;right:64px;top:232px;height:1px;
+    background:linear-gradient(90deg,rgba(203,208,255,0),rgba(203,208,255,.85) 12%,rgba(203,208,255,.85) 88%,rgba(203,208,255,0));z-index:2}
+  .tl-item{position:relative;padding:26px 22px;border:1px solid var(--line);border-radius:14px;
+    background:linear-gradient(160deg,rgba(203,208,255,.06),rgba(203,208,255,.015));height:100%;
+    display:flex;flex-direction:column;justify-content:center}
+  .tl-item .dot{position:absolute;left:50%;top:-41px;width:9px;height:9px;border-radius:50%;
+    background:var(--lav);transform:translateX(-50%);box-shadow:0 0 14px rgba(203,208,255,.9)}
+  .tl-item .dot::after{content:"";position:absolute;left:50%;top:50%;width:26px;height:26px;
+    transform:translate(-50%,-50%);border:1px solid rgba(203,208,255,.35);border-radius:50%}
+  .tl-item .yr{font-size:10.5px;letter-spacing:.18em;color:var(--lav-dim);margin-bottom:12px}
+  .tl-item h3{font-size:16px;font-weight:700;line-height:1.5}
+  .tl-item p{font-size:12px;line-height:1.85;color:rgba(255,255,255,.62);margin-top:10px}
+
+  /* ---------- 页 14 结束 ---------- */
+  .end-inner{position:absolute;left:0;right:0;top:214px;text-align:center;z-index:2}
+  .end-inner .big{font-size:70px;font-weight:700;letter-spacing:.26em;text-indent:.26em;
+    text-shadow:0 8px 60px rgba(120,140,255,.5)}
+  .end-inner .cn{font-size:22px;letter-spacing:.34em;color:var(--lav);margin-top:18px;text-indent:.34em}
+  .end-inner .meta{font-size:12px;letter-spacing:.2em;color:rgba(255,255,255,.42);margin-top:34px}
+  .end-tags{position:absolute;left:0;right:0;bottom:120px;z-index:2;display:flex;justify-content:center;gap:14px}
+  .end-tags span{font-size:11px;letter-spacing:.14em;color:rgba(255,255,255,.55);
+    border:1px solid rgba(203,208,255,.2);border-radius:999px;padding:8px 16px}
+</style>
+</head>
+<body>
+<div id="viewport">
+  <div id="stage">
+    <canvas id="stars" width="1280" height="720"></canvas>
+
+    <!-- 01 封面 -->
+    <section class="slide cover active" data-nav="封面 · 逐梦星河">
+      <div class="cover-bg"><img src="assets/image1.jpeg" alt="星空与行星边缘"></div>
+      <div class="cover-veil"></div>
+      <div class="cover-inner">
+        <div class="eyebrow enter" style="--d:.15s">信息科技 · 天文专题课程</div>
+        <h1 class="enter" style="--d:.3s">逐梦星河</h1>
+        <div class="cover-rule enter" style="--d:.75s"></div>
+        <h2 class="enter" style="--d:.55s">望远镜的辉煌足迹</h2>
+        <p class="enter" style="--d:.8s">从 17 世纪初荷兰眼镜铺里的第一片透镜，<br>到贵州山坳中口径 500 米的“中国天眼”。</p>
+      </div>
+      <div class="cover-hint enter" style="--d:1.1s">按 <b>→</b> / <b>空格</b> 开始 · <b>O</b> 目录 · <b>F</b> 全屏</div>
+    </section>
+
+    <!-- 02 历史 -->
+    <section class="slide" data-nav="望远镜的历史">
+      <div class="bg-strip"><img src="assets/image3.jpeg" alt=""></div>
+      <header class="head">
+        <div class="eyebrow enter" style="--d:.05s">01 / 历史起点</div>
+        <h2 class="enter" style="--d:.14s">望远镜的历史</h2>
+        <div class="rule enter" style="--d:.3s"></div>
+      </header>
+      <div class="body">
+        <div class="two-col">
+          <article class="card story build" data-build="1">
+            <figure class="fig plate"><img src="assets/image5.png" alt="汉斯·利珀希肖像"></figure>
+            <div class="txt">
+              <span class="tag">1608 · 荷兰</span>
+              <h3>第一架望远镜</h3>
+              <p>荷兰眼镜商<em>汉斯·利珀希</em>偶然发现，采用凸透镜与凹透镜组合，能将远处的物体放大 <strong>3 倍</strong>。</p>
+            </div>
+          </article>
+          <article class="card story build" data-build="2">
+            <figure class="fig plate"><img src="assets/image4.png" alt="早期望远镜"></figure>
+            <div class="txt">
+              <span class="tag">1609 · 伽利略</span>
+              <h3>伽利略的改进</h3>
+              <p>伽利略将倍数提升至 <strong>30 倍</strong>，从而首次实现对<em>月球环形山、木星卫星</em>等天体的颠覆性观测。</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 折射 -->
+    <section class="slide" data-nav="折射望远镜">
+      <div class="bg-strip"><img src="assets/image3.jpeg" alt=""></div>
+      <header class="head">
+        <div class="eyebrow enter" style="--d:.05s">02 / 折射</div>
+        <h2 class="enter" style="--d:.14s">折射望远镜</h2>
+        <div class="rule enter" style="--d:.3s"></div>
+      </header>
+      <div class="body">
+        <div class="lens-row">
+          <div class="card lens-card build" data-build="1">
+            <div class="nm">伽利略式</div>
+            <div class="fm"><span>凸透镜</span> 物镜 <b>+</b> <span>凹透镜</span> 目镜</div>
+          </div>
+          <div class="card lens-card build" data-build="1">
+            <div class="nm">开普勒式</div>
+            <div class="fm">物镜、目镜<b>都是凸透镜</b></div>
+          </div>
+          <figure class="figure build" data-build="1">
+            <div class="fig plate"><img src="assets/image6.png" alt="双筒望远镜"></div>
+            <div class="cap">折射式结构 · 双筒望远镜</div>
+          </figure>
+        </div>
+        <div class="split">
+          <div class="card problem build" data-build="2">
+            <h3>色差问题</h3>
+            <p>不同颜色的光在玻璃中的折射率不同，蓝光偏折更多、红光更少，焦点无法重合，图像边缘便出现彩色条纹。</p>
+          </div>
+          <figure class="figure build" data-build="2">
+            <div class="fig"><img src="assets/image7.png" alt="色差导致的彩色边缘"></div>
+            <div class="cap">同一建筑：正常成像 / 带色差的成像</div>
+          </figure>
+          <figure class="figure build" data-build="3">
+            <div class="fig plate"><img src="assets/image10.png" alt="焦点处色散示意"></div>
+            <div class="cap">焦点处色散：不同色光焦点分离</div>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- 04 反射 -->
+    <section class="slide" data-nav="反射望远镜">
+      <div class="bg-strip"><img src="assets/image3.jpeg" alt=""></div>
+      <header class="head">
+        <div class="eyebrow enter" style="--d:.05s">03 / 反射</div>
+        <h2 class="enter" style="--d:.14s">反射望远镜</h2>
+        <div class="rule enter" style="--d:.3s"></div>
+      </header>
+      <div class="body">
+        <div class="three">
+          <article class="tile card build" data-build="1">
+            <div class="fig plate"><img src="assets/image11.jpeg" alt="牛顿式反射望远镜"></div>
+            <h3><span class="idx">01</span>牛顿望远镜</h3>
+            <p>牛顿用<em>凹面镜</em>替代透镜收集光线，从根本上消除了色差问题。</p>
+          </article>
+          <article class="tile card build" data-build="2">
+            <div class="fig"><img src="assets/image9.png" alt="棱镜色散"></div>
+            <h3><span class="idx">02</span>光的反射</h3>
+            <p>光碰到物体表面，被弹回原来物质里继续传播，这种现象叫做<strong>光的反射</strong>。</p>
+          </article>
+          <article class="tile card build" data-build="3">
+            <div class="fig plate"><img src="assets/image10.png" alt="焦点处色散"></div>
+            <h3><span class="idx">03</span>色差问题</h3>
+            <p>与透镜不同，反射镜不会因色散产生色差，确保观察到的天体色彩真实。</p>
+            <a class="chip" href="https://phet.colorado.edu/sims/html/geometric-optics/latest/geometric-optics_all.html?locale=zh_CN" target="_blank" rel="noopener">PhET 几何光学模拟 <span class="arrow">↗</span></a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 05 折反射 -->
+    <section class="slide" data-nav="折反射望远镜">
+      <div class="bg-strip"><img src="assets/image3.jpeg" alt=""></div>
+      <header class="head">
+        <div class="eyebrow enter" style="--d:.05s">04 / 折反射</div>
+        <h2 class="enter" style="--d:.14s">折反射望远镜</h2>
+        <div class="rule enter" style="--d:.3s"></div>
+      </header>
+      <div class="body">
+        <div class="side">
+          <div class="stack">
+            <article class="card build" data-build="1">
+              <div class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><ellipse cx="12" cy="12" rx="10" ry="5.2"/><ellipse cx="12" cy="12" rx="5.2" ry="10"/></svg></div>
+              <div><h3>设计理念</h3><p>巧妙融合折射与反射原理，克服单一类型望远镜的局限，实现更高效能。</p></div>
+            </article>
+            <article class="card build" data-build="2">
+              <div class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4.4"/><path d="M12 4v3M12 17v3M4 12h3M17 12h3"/></svg></div>
+              <div><h3>结构特性</h3><p>采用主镜与次镜组合，辅以透镜组，有效减少色差与球差，提升图像质量。</p></div>
+            </article>
+            <article class="card build" data-build="3">
+              <div class="icon"><svg viewBox="0 0 24 24"><path d="M6 18a9 9 0 0 1 12 0"/><path d="M3 18h18"/><circle cx="12" cy="8" r="2.4"/></svg></div>
+              <div><h3>便携与多功能</h3><p>结构紧凑，便于携带，适用于多种观测环境，满足专业与业余观测需求。</p></div>
+            </article>
+          </div>
+          <figure class="figure build" data-build="2">
+            <div class="fig plate"><img src="assets/image15.png" alt="折反射望远镜"></div>
+            <div class="cap">折反射式天文望远镜 · 主镜与透镜组合</div>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- 06 可见光的局限 -->
+    <section class="slide" data-nav="可见光的局限">
+      <div class="bg-strip"><img src="assets/image3.jpeg" alt=""></div>
+      <header class="head">
+        <div class="eyebrow enter" style="--d:.05s">05 / 光的局限</div>
+        <h2 class="enter" style="--d:.14s">可见光的局限</h2>
+        <div class="rule enter" style="--d:.3s"></div>
+      </header>
+      <div class="body">
+        <div class="duo">
+          <figure class="figure build" data-build="1">
+            <div class="fig"><img src="assets/image16.png" alt="黑洞照片"></div>
+            <div>
+              <p>天体不只发出可见光，很多重要信息藏在<strong>看不见的电磁波</strong>里。</p>
+            </div>
+            <div class="cap">事件视界望远镜拍摄的黑洞 · 靠射电波段成像</div>
+          </figure>
+          <figure class="figure build" data-build="2">
+            <div class="fig plate"><img src="assets/image17.png" alt="电磁波谱"></div>
+            <div>
+              <p>地球大气会挡住一部分可见光以外的辐射，所以要造<strong>不同波段</strong>的望远镜去接收。</p>
+            </div>
+            <div class="cap">电磁波谱：可见光只占极窄的一段（约 400–700 nm）</div>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- 07 使用案例 -->
+    <section class="slide" data-nav="天文望远镜使用案例">
+      <div class="bg-strip"><img src="assets/image3.jpeg" alt=""></div>
+      <header class="head">
+        <div class="eyebrow enter" style="--d:.05s">06 / 应用案例</div>
+        <h2 class="enter" style="--d:.14s">天文望远镜使用案例</h2>
+        <div class="rule enter" style="--d:.3s"></div>
+      </header>
+      <div class="body">
+        <div class="duo">
+          <figure class="figure build" data-build="1">
+            <div class="fig"><img src="assets/image19.png" alt="创生之柱"></div>
+            <div>
+              <h3>太空望远镜的宇宙揭秘</h3>
+              <p>太空望远镜揭示了宇宙膨胀的秘密，拍摄了深空最遥远的星系，改变了我们对宇宙的认知。</p>
+              <div class="cap" style="margin-top:8px">韦布空间望远镜 · 创生之柱</div>
+            </div>
+          </figure>
+          <figure class="figure build" data-build="2">
+            <div class="fig"><img src="assets/image18.png" alt="太阳与黑子"></div>
+            <div>
+              <h3>太阳黑子的观测</h3>
+              <p>地面望远镜捕捉太阳黑子活动，帮助科学家理解太阳磁场变化，预测太阳风暴对地球的影响。</p>
+              <a class="chip" href="https://stellarium-web.org/" target="_blank" rel="noopener">Stellarium 实时星空 <span class="arrow">↗</span></a>
+            </div>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- 08 科研作用 -->
+    <section class="slide" data-nav="科学研究中的关键作用">
+      <div class="bg-strip"><img src="assets/image3.jpeg" alt=""></div>
+      <header class="head">
+        <div class="eyebrow enter" style="--d:.05s">07 / 科学价值</div>
+        <h2 class="enter sm" style="--d:.14s">望远镜在科学研究中的关键作用</h2>
+        <div class="rule enter" style="--d:.3s"></div>
+      </header>
+      <div class="body">
+        <div class="list-side">
+          <div class="rows">
+            <div class="row build" data-build="1"><div class="n">01</div><div><h3>揭示宇宙奥秘</h3><p>望远镜是探索宇宙深处的眼睛，捕捉遥远星系的微弱光芒，揭示宇宙的起源、结构和演化。</p></div></div>
+            <div class="row build" data-build="2"><div class="n">02</div><div><h3>观测恒星生命周期</h3><p>观察恒星从诞生到死亡的全过程，理解内部核反应机制及其对银河系化学元素的影响。</p></div></div>
+            <div class="row build" data-build="3"><div class="n">03</div><div><h3>探测暗物质与暗能量</h3><p>现代望远镜技术使科学家能够间接探测到暗物质和暗能量的存在，这是解开宇宙加速膨胀之谜的关键。</p></div></div>
+            <div class="row build" data-build="4"><div class="n">04</div><div><h3>预测天文现象</h3><p>通过对历史数据的分析，预测日食、彗星回归等天文事件，增进人类对自然规律的理解。</p></div></div>
+          </div>
+          <figure class="figure build" data-build="1">
+            <div class="fig"><img src="assets/image20.png" alt="星云与星团"></div>
+            <div class="cap">深空星云 · 望远镜累积曝光下的宇宙</div>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- 09 FAST -->
+    <section class="slide" data-nav="FAST 射电望远镜">
+      <div class="bg-strip"><img src="assets/image3.jpeg" alt=""></div>
+      <header class="head">
+        <div class="eyebrow enter" style="--d:.05s">08 / 中国天眼</div>
+        <h2 class="enter sm" style="--d:.14s">FAST 射电望远镜的建造历程与科学价值</h2>
+        <div class="rule enter" style="--d:.3s"></div>
+      </header>
+      <div class="body">
+        <div class="list-side">
+          <div class="rows">
+            <div class="row build" data-build="1"><div class="n">01</div><div><h3>选址与挑战</h3><p>位于贵州喀斯特洼坑，自然地形提供支撑，但需克服地质复杂、气候多变等难题。</p></div></div>
+            <div class="row build" data-build="2"><div class="n">02</div><div><h3>技术创新</h3><p>采用主动反射面技术，实现高精度天线面形调整，大幅提高观测灵敏度。</p></div></div>
+            <div class="row build" data-build="3"><div class="n">03</div><div><h3>科学使命</h3><p>探索宇宙起源、脉冲星搜索、引力波探测等领域，推动天文学前沿研究。</p></div></div>
+            <div class="row build" data-build="4"><div class="n">04</div><div><h3>国际影响</h3><p>作为世界最大单口径射电望远镜，提升了中国在国际天文学界的地位和影响力。</p></div></div>
+          </div>
+          <figure class="figure build" data-build="1">
+            <div class="fig"><img src="assets/image21.png" alt="FAST 中国天眼">
+              <div class="stat"><b>500 m</b><span>世界最大单口径</span></div>
+            </div>
+            <div class="cap">贵州平塘 · 500 米口径球面射电望远镜</div>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10 LAMOST -->
+    <section class="slide" data-nav="郭守敬望远镜 LAMOST">
+      <div class="bg-strip"><img src="assets/image3.jpeg" alt=""></div>
+      <header class="head">
+        <div class="eyebrow enter" style="--d:.05s">09 / 光谱巡天</div>
+        <h2 class="enter sm" style="--d:.14s">郭守敬望远镜（LAMOST）的技术特点与科学贡献</h2>
+        <div class="rule enter" style="--d:.3s"></div>
+      </header>
+      <div class="body">
+        <div class="list-side">
+          <div class="rows">
+            <div class="row build" data-build="1"><div class="n">01</div><div><h3>独特设计</h3><p>4 米主镜与 1.2 米副镜，拥有 4000 个可调光纤，实现大视场光谱观测，刷新天文观测效率记录。</p></div></div>
+            <div class="row build" data-build="2"><div class="n">02</div><div><h3>海量光谱数据采集</h3><p>每晚可观测近 4000 个天体，累计获取数百万条高质量光谱，为银河系结构研究提供宝贵资料。</p></div></div>
+            <div class="row build" data-build="3"><div class="n">03</div><div><h3>科学成果丰硕</h3><p>助力发现新恒星、星团及银河系暗物质分布，推动宇宙学、恒星物理等多领域前沿研究。</p></div></div>
+            <div class="row build" data-build="4"><div class="n">04</div><div><h3>国际合作与共享</h3><p>数据对全球科研人员开放，促进国际天文合作，提升中国在天文学界的影响力。</p></div></div>
+          </div>
+          <figure class="figure build" data-build="1">
+            <div class="fig"><img src="assets/image22.png" alt="LAMOST 观测站"></div>
+            <div class="cap">河北兴隆 · 郭守敬望远镜（LAMOST）</div>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- 11 空间望远镜 -->
+    <section class="slide" data-nav="中国空间望远镜">
+      <div class="bg-strip"><img src="assets/image3.jpeg" alt=""></div>
+      <header class="head">
+        <div class="eyebrow enter" style="--d:.05s">10 / 走向太空</div>
+        <h2 class="enter" style="--d:.14s">中国空间望远镜项目的进展与展望</h2>
+        <div class="rule enter" style="--d:.3s"></div>
+      </header>
+      <div class="body">
+        <div class="quad">
+          <article class="card build" data-build="1">
+            <div class="icon"><svg viewBox="0 0 24 24"><rect x="3.5" y="9" width="9" height="6" rx="1.2"/><circle cx="16.5" cy="12" r="4"/><path d="M8 9V5.5M8 15v3.5"/></svg></div>
+            <div><h3>项目概述</h3><p>中国空间站光学舱搭载的空间望远镜，旨在实现全天候、全波段的宇宙观测，推动天文学前沿研究。</p></div>
+          </article>
+          <article class="card build" data-build="2">
+            <div class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="7.5"/><path d="M12 4.5v3M12 16.5v3M4.5 12h3M16.5 12h3"/><circle cx="12" cy="12" r="2"/></svg></div>
+            <div><h3>关键技术</h3><p>采用先进光学系统与高灵敏探测器，突破空间环境下的稳定运行难题，确保高质量数据采集。</p></div>
+          </article>
+          <article class="card build" data-build="3">
+            <div class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1"/></svg></div>
+            <div><h3>科学目标</h3><p>探索暗物质、暗能量之谜，研究星系演化，寻找外星生命迹象，拓展人类对宇宙的认知边界。</p></div>
+          </article>
+          <article class="card build" data-build="4">
+            <div class="icon"><svg viewBox="0 0 24 24"><path d="M12 20V8"/><path d="M7 12l5-5 5 5"/><path d="M4 20h16"/></svg></div>
+            <div><h3>未来展望</h3><p>计划在未来十年内发射，预期将揭示宇宙深层次奥秘，引领全球天文学研究新方向。</p></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 12 回顾 -->
+    <section class="slide" data-nav="回顾发展历程">
+      <div class="bg-strip"><img src="assets/image3.jpeg" alt=""></div>
+      <header class="head">
+        <div class="eyebrow enter" style="--d:.05s">11 / 技术回顾</div>
+        <h2 class="enter" style="--d:.14s">回顾望远镜技术的发展历程</h2>
+        <div class="rule enter" style="--d:.3s"></div>
+      </header>
+      <div class="tl-line grow" data-build="1"></div>
+      <div class="tl">
+        <article class="tl-item build" data-build="2">
+          <i class="dot"></i>
+          <div class="yr">17 世纪 · 起源</div>
+          <h3>起源与早期发展</h3>
+          <p>望远镜起源于 17 世纪初，伽利略改进荷兰的望远镜，首次将它指向天空，开启了天文学的新纪元。</p>
+        </article>
+        <article class="tl-item build" data-build="3">
+          <i class="dot"></i>
+          <div class="yr">技术演进</div>
+          <h3>光学结构的革新</h3>
+          <p>从折射到反射，再到折反射，望远镜技术不断革新，每一次进步都极大地扩展了人类对宇宙的认知边界。</p>
+        </article>
+        <article class="tl-item build" data-build="4">
+          <i class="dot"></i>
+          <div class="yr">20 世纪 · 突破</div>
+          <h3>现代突破</h3>
+          <p>大型望远镜如凯克、哈勃等的出现，以及射电、红外等多波段观测技术的发展，标志着望远镜进入了全新时代。</p>
+        </article>
+        <article class="tl-item build" data-build="5">
+          <i class="dot"></i>
+          <div class="yr">未来</div>
+          <h3>未来展望</h3>
+          <p>未来的望远镜将拥有更高的分辨率和更大的探测范围，人类探索宇宙的视野将更加广阔。</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- 13 展望 -->
+    <section class="slide" data-nav="未来发展趋势">
+      <div class="bg-strip"><img src="assets/image3.jpeg" alt=""></div>
+      <header class="head">
+        <div class="eyebrow enter" style="--d:.05s">12 / 未来展望</div>
+        <h2 class="enter" style="--d:.14s">未来望远镜技术的发展趋势</h2>
+        <div class="rule enter" style="--d:.3s"></div>
+      </header>
+      <div class="body">
+        <div class="list-side">
+          <div class="rows">
+            <div class="row build" data-build="1"><div class="n">01</div><div><h3>超大口径望远镜</h3><p>追求更大口径，以捕捉更微弱的宇宙信号，揭示宇宙早期的秘密。</p></div></div>
+            <div class="row build" data-build="2"><div class="n">02</div><div><h3>多波段观测融合</h3><p>整合可见光、红外、射电等多波段数据，实现全方位宇宙现象观测，提升研究深度。</p></div></div>
+            <div class="row build" data-build="3"><div class="n">03</div><div><h3>智能化观测系统</h3><p>采用 AI 技术优化望远镜操作，自动识别天体，提高观测效率与精度，开启智能天文新时代。</p></div></div>
+          </div>
+          <figure class="figure build" data-build="1">
+            <div class="fig"><img src="assets/image27.png" alt="詹姆斯·韦布空间望远镜"></div>
+            <div class="cap">詹姆斯·韦布空间望远镜 · 下一代太空之眼</div>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- 14 结束 -->
+    <section class="slide" data-nav="THANKS">
+      <div class="cover-bg"><img src="assets/image1.jpeg" alt=""></div>
+      <div class="cover-veil"></div>
+      <div class="end-inner">
+        <div class="big enter" style="--d:.2s">THANKS</div>
+        <div class="cn enter" style="--d:.5s">逐梦星河</div>
+        <div class="meta enter" style="--d:.8s">望远镜的辉煌足迹 · 信息科技天文专题</div>
+      </div>
+      <div class="end-tags">
+        <span class="build" data-build="1">折射</span>
+        <span class="build" data-build="1">反射</span>
+        <span class="build" data-build="1">折反射</span>
+        <span class="build" data-build="2">多波段</span>
+        <span class="build" data-build="2">中国天眼</span>
+        <span class="build" data-build="2">空间望远镜</span>
+      </div>
+    </section>
+
+    <!-- HUD -->
+    <div class="hud">
+      <div class="brand">逐梦星河 · 望远镜的辉煌足迹</div>
+      <div class="pageno"><b id="pnum">01</b> / 14 <span id="pnav">封面 · 逐梦星河</span></div>
+    </div>
+    <div class="progress"><i id="bar"></i></div>
+    <div class="ctrls">
+      <button class="ctrl" id="btnMenu" title="目录 (O)">
+        <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+      <button class="ctrl" id="btnFull" title="全屏 (F)">
+        <svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+      </button>
+    </div>
+
+    <!-- 目录 -->
+    <div class="overlay" id="overlay">
+      <div class="ov-head">
+        <h2>目录 <span style="font-size:12px;letter-spacing:.2em;color:rgba(255,255,255,.35);margin-left:10px">CONTENTS</span></h2>
+        <span>逐梦星河 · 望远镜的辉煌足迹</span>
+      </div>
+      <div class="toc" id="toc"></div>
+      <div class="ov-foot">← → 翻页 &nbsp;·&nbsp; <b>O</b> 目录 &nbsp;·&nbsp; <b>F</b> 全屏 &nbsp;·&nbsp; <b>B</b> 黑屏 &nbsp;·&nbsp; <b>Esc</b> 退出</div>
+    </div>
+
+    <!-- 黑屏 -->
+    <div class="blackout" id="blackout"><span>B / ESC 返回</span></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const stage = document.getElementById('stage');
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const bar = document.getElementById('bar');
+  const pnum = document.getElementById('pnum');
+  const pnav = document.getElementById('pnav');
+  const overlay = document.getElementById('overlay');
+  const toc = document.getElementById('toc');
+  const blackout = document.getElementById('blackout');
+
+  let idx = 0, step = 0, wheelLock = 0;
+
+  // 元数据
+  const meta = slides.map(s => ({
+    nav: s.dataset.nav || '',
+    max: Math.max(0, ...Array.from(s.querySelectorAll('[data-build]')).map(e => +e.dataset.build))
+  }));
+
+  // 同一分步内的错落延迟
+  slides.forEach(s => {
+    const groups = {};
+    s.querySelectorAll('[data-build]').forEach(el => {
+      const b = el.dataset.build;
+      groups[b] = (groups[b] || 0);
+      el._d = groups[b]++;
+    });
+  });
+
+  // 缩放舞台
+  function fit(){
+    const sc = Math.min(window.innerWidth / 1280, window.innerHeight / 720);
+    stage.style.setProperty('--scale', sc);
+  }
+  window.addEventListener('resize', fit);
+  fit();
+
+  // 分步应用
+  function applyStep(instant){
+    slides[idx].querySelectorAll('[data-build]').forEach(el => {
+      const on = +el.dataset.build <= step;
+      if(on){
+        if(!el.classList.contains('on')){
+          el.style.transitionDelay = (instant ? 0 : (el._d || 0) * 80) + 'ms';
+        }
+        el.classList.add('on');
+      }else{
+        el.style.transitionDelay = '0ms';
+        el.classList.remove('on');
+      }
+    });
+    updateHud();
+  }
+
+  function updateHud(){
+    const total = slides.length;
+    pnum.textContent = String(idx + 1).padStart(2, '0');
+    pnav.textContent = meta[idx].nav;
+    bar.style.width = ((idx + (meta[idx].max ? step / meta[idx].max : 0)) / total * 100) + '%';
+    Array.from(toc.children).forEach((c, i) => c.classList.toggle('cur', i === idx));
+  }
+
+  function activate(target, instant, targetStep){
+    if(target < 0 || target >= slides.length) return;
+    const old = slides[idx];
+    old.classList.remove('active');
+    old.classList.add('leaving');
+    setTimeout(() => old.classList.remove('leaving'), 620);
+
+    idx = target;
+    step = targetStep || 0;
+    const s = slides[idx];
+    s.querySelectorAll('[data-build]').forEach(el => el.classList.remove('on'));
+    if(instant) s.classList.add('instant');
+    s.classList.add('active');
+    applyStep(instant);
+    if(instant) setTimeout(() => s.classList.remove('instant'), 120);
+  }
+
+  function next(){
+    if(blackout.classList.contains('show')) return;
+    if(step < meta[idx].max){ step++; applyStep(false); }
+    else if(idx < slides.length - 1){ activate(idx + 1, false, 0); }
+  }
+  function prev(){
+    if(blackout.classList.contains('show')) return;
+    if(step > 0){ step--; applyStep(false); }
+    else if(idx > 0){ activate(idx - 1, true, meta[idx - 1].max); }
+  }
+  function jump(n){
+    activate(n, true, meta[n].max);
+    closeOverlay();
+  }
+
+  // 目录
+  slides.forEach((s, i) => {
+    const item = document.createElement('div');
+    item.className = 'toc-item';
+    item.innerHTML = '<div class="n">' + String(i + 1).padStart(2, '0') + '</div><div class="t">' + (s.dataset.nav || '') + '</div>';
+    item.addEventListener('click', e => { e.stopPropagation(); jump(i); });
+    toc.appendChild(item);
+  });
+
+  function openOverlay(){ overlay.classList.add('show'); }
+  function closeOverlay(){ overlay.classList.remove('show'); }
+  function toggleOverlay(){ overlay.classList.toggle('show'); }
+  function toggleBlack(){ blackout.classList.toggle('show'); }
+
+  document.getElementById('btnMenu').addEventListener('click', e => { e.stopPropagation(); toggleOverlay(); });
+  document.getElementById('btnFull').addEventListener('click', e => { e.stopPropagation(); toggleFull(); });
+  overlay.addEventListener('click', e => { if(e.target === overlay) closeOverlay(); });
+  blackout.addEventListener('click', toggleBlack);
+
+  function toggleFull(){
+    if(!document.fullscreenElement) document.documentElement.requestFullscreen && document.documentElement.requestFullscreen();
+    else document.exitFullscreen && document.exitFullscreen();
+  }
+
+  // 点击推进
+  stage.addEventListener('click', e => {
+    if(e.target.closest('a, button, .overlay, .toc-item, .blackout')) return;
+    if(overlay.classList.contains('show')) { closeOverlay(); return; }
+    next();
+  });
+
+  // 滚轮
+  stage.addEventListener('wheel', e => {
+    const now = Date.now();
+    if(now - wheelLock < 280) return;
+    if(Math.abs(e.deltaY) < 4) return;
+    wheelLock = now;
+    e.deltaY > 0 ? next() : prev();
+  }, { passive: true });
+
+  // 触摸
+  let tx = 0, ty = 0;
+  stage.addEventListener('touchstart', e => { tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, { passive: true });
+  stage.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - tx;
+    const dy = e.changedTouches[0].clientY - ty;
+    if(Math.max(Math.abs(dx), Math.abs(dy)) < 45) return;
+    if(Math.abs(dx) > Math.abs(dy)) dx < 0 ? next() : prev();
+    else dy < 0 ? next() : prev();
+  }, { passive: true });
+
+  // 键盘
+  document.addEventListener('keydown', e => {
+    switch(e.key){
+      case 'ArrowRight': case 'ArrowDown': case 'PageDown': case ' ':
+        e.preventDefault(); next(); break;
+      case 'ArrowLeft': case 'ArrowUp': case 'PageUp':
+        e.preventDefault(); prev(); break;
+      case 'Enter': next(); break;
+      case 'Home': e.preventDefault(); jump(0); break;
+      case 'End': e.preventDefault(); jump(slides.length - 1); break;
+      case 'f': case 'F': toggleFull(); break;
+      case 'o': case 'O': case 'g': case 'G': toggleOverlay(); break;
+      case 'b': case 'B': toggleBlack(); break;
+      case 'Escape': closeOverlay(); blackout.classList.remove('show'); break;
+    }
+  });
+
+  // 星空
+  const cv = document.getElementById('stars');
+  const ctx = cv.getContext('2d');
+  const dpr = Math.min(2, window.devicePixelRatio || 1);
+  cv.width = 1280 * dpr; cv.height = 720 * dpr;
+  ctx.scale(dpr, dpr);
+  const stars = Array.from({length: 150}, () => ({
+    x: Math.random() * 1280,
+    y: Math.random() * 720,
+    r: Math.random() * 1.25 + .25,
+    a: Math.random() * .55 + .15,
+    ph: Math.random() * Math.PI * 2,
+    sp: Math.random() * 1.6 + .4,
+    vy: Math.random() * .02 + .005
+  }));
+  let t0 = performance.now(), last = 0;
+  function draw(now){
+    const t = (now - t0) / 1000;
+    ctx.clearRect(0, 0, 1280, 720);
+    for(const s of stars){
+      s.y -= s.vy;
+      if(s.y < -4) s.y = 724;
+      const tw = s.a * (.55 + .45 * Math.sin(t * s.sp + s.ph));
+      ctx.beginPath();
+      ctx.fillStyle = 'rgba(220,224,255,' + tw.toFixed(3) + ')';
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fill();
+      if(s.r > 1.1){
+        ctx.beginPath();
+        ctx.fillStyle = 'rgba(160,175,255,' + (tw * .25).toFixed(3) + ')';
+        ctx.arc(s.x, s.y, s.r * 3.4, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+
+  // 支持 #3 这样的链接直接打开某一页（方便课前定位，也便于浏览器收藏）
+  const h = (location.hash || '').match(/#(\d+)/);
+  if(h){
+    const n = parseInt(h[1], 10) - 1;
+    if(n > 0 && n < slides.length) activate(n, true, meta[n].max);
+  }
+
+  applyStep(false);
+})();
+</script>
+</body>
+</html>
