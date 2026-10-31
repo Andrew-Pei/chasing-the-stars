@@ -49,13 +49,13 @@
   /* ---------- 页眉 ---------- */
   .head{position:absolute;left:64px;top:46px;right:64px;z-index:2}
   .eyebrow{
-    font-size:11px;letter-spacing:.26em;color:var(--lav-dim);
-    display:flex;align-items:center;gap:10px;font-weight:600;
+    font-size:16px;letter-spacing:.2em;color:var(--lav-dim);
+    display:flex;align-items:center;gap:12px;font-weight:600;
   }
-  .eyebrow::before{content:"";width:22px;height:1px;background:var(--lav-dim)}
-  .head h2{font-size:30px;font-weight:700;letter-spacing:.04em;margin-top:13px;line-height:1.2}
-  .head h2.sm{font-size:26px}
-  .rule{width:54px;height:2px;background:var(--lav);margin-top:16px;border-radius:2px;box-shadow:0 0 16px rgba(203,208,255,.7)}
+  .eyebrow::before{content:"";width:26px;height:1px;background:var(--lav-dim)}
+  .head h2{font-size:38px;font-weight:700;letter-spacing:.04em;margin-top:14px;line-height:1.2}
+  .head h2.sm{font-size:32px}
+  .rule{width:64px;height:3px;background:var(--lav);margin-top:16px;border-radius:2px;box-shadow:0 0 16px rgba(203,208,255,.7)}
 
   /* ---------- 入场 ---------- */
   .enter{opacity:0}
@@ -80,8 +80,8 @@
     border:1px solid var(--line);border-radius:16px;padding:24px 26px;position:relative;
     backdrop-filter:blur(2px);
   }
-  .card h3{font-size:20px;font-weight:700;letter-spacing:.02em}
-  .card p{font-size:14px;line-height:1.78;color:rgba(255,255,255,.72);margin-top:10px}
+  .card h3{font-size:24px;font-weight:700;letter-spacing:.02em}
+  .card p{font-size:21px;line-height:1.6;color:rgba(255,255,255,.8);margin-top:10px}
   .card em{font-style:normal;color:var(--lav);font-weight:600}
   .card strong{color:#fff;font-weight:700}
 
@@ -92,7 +92,7 @@
   .fig.plate img{object-fit:contain;width:100%;height:100%}
   .figure{display:flex;flex-direction:column;gap:9px;height:100%;min-height:0;overflow:hidden}
   .figure .fig{flex:1;min-height:0}
-  .cap{font-size:11.5px;color:rgba(255,255,255,.42);letter-spacing:.04em}
+  .cap{font-size:16px;color:rgba(255,255,255,.6);letter-spacing:.04em}
 
   /* ---------- 封面 ---------- */
   .cover-bg{position:absolute;inset:0;z-index:0}
@@ -105,14 +105,14 @@
       linear-gradient(to top,rgba(4,4,10,.85),transparent 40%)}
   .cover-inner{position:absolute;left:96px;top:196px;z-index:2;width:720px}
   .cover-inner .eyebrow{color:#aab2ff}
-  .cover-inner h1{font-size:76px;font-weight:700;letter-spacing:.1em;margin-top:22px;line-height:1.05;
+  .cover-inner h1{font-size:88px;font-weight:700;letter-spacing:.1em;margin-top:22px;line-height:1.05;
     text-shadow:0 6px 50px rgba(110,130,255,.45)}
   .cover-rule{height:2px;width:300px;background:linear-gradient(90deg,var(--lav),rgba(203,208,255,0));margin:26px 0 20px;
     transform-origin:left}
-  .cover-inner h2{font-size:27px;font-weight:400;letter-spacing:.22em;color:var(--lav)}
-  .cover-inner p{font-size:14.5px;line-height:2;color:rgba(255,255,255,.55);margin-top:22px}
-  .cover-hint{position:absolute;left:0;right:0;bottom:74px;text-align:center;z-index:2;
-    font-size:12px;letter-spacing:.16em;color:rgba(255,255,255,.45)}
+  .cover-inner h2{font-size:34px;font-weight:400;letter-spacing:.22em;color:var(--lav)}
+  .cover-inner p{font-size:21px;line-height:1.85;color:rgba(255,255,255,.72);margin-top:22px}
+  .cover-hint{position:absolute;left:0;right:0;bottom:58px;text-align:center;z-index:2;
+    font-size:16px;letter-spacing:.14em;color:rgba(255,255,255,.6)}
   .cover-hint b{color:var(--lav);font-weight:600}
   .cover-inner h1{animation:glowPulse 6s ease-in-out infinite alternate}
   @keyframes glowPulse{from{text-shadow:0 6px 40px rgba(110,130,255,.28)}to{text-shadow:0 8px 72px rgba(140,160,255,.62)}}
@@ -120,10 +120,10 @@
   /* ---------- HUD ---------- */
   .hud{position:absolute;left:64px;right:64px;bottom:28px;z-index:10;
     display:flex;justify-content:space-between;align-items:flex-end;
-    font-size:11px;letter-spacing:.12em;color:rgba(255,255,255,.34);pointer-events:none}
+    font-size:15px;letter-spacing:.12em;color:rgba(255,255,255,.45);pointer-events:none}
   .hud .brand{letter-spacing:.2em}
-  .hud .pageno{color:rgba(255,255,255,.55);letter-spacing:.16em}
-  .hud .pageno b{color:#fff;font-weight:600;font-size:13px}
+  .hud .pageno{color:rgba(255,255,255,.6);letter-spacing:.16em}
+  .hud .pageno b{color:#fff;font-weight:600;font-size:18px}
   .hud .pageno span{margin-left:12px;color:var(--lav-dim);letter-spacing:.1em}
   .progress{position:absolute;left:0;bottom:0;height:2px;width:100%;background:rgba(255,255,255,.06);z-index:10}
   .progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,rgba(203,208,255,.5),var(--lav));
@@ -140,50 +140,50 @@
     backdrop-filter:blur(20px);opacity:0;visibility:hidden;transition:opacity .35s,visibility .35s;padding:48px 64px}
   .overlay.show{opacity:1;visibility:visible}
   .overlay .ov-head{display:flex;justify-content:space-between;align-items:flex-end}
-  .overlay .ov-head h2{font-size:24px;font-weight:700;letter-spacing:.1em}
-  .overlay .ov-head span{font-size:11px;letter-spacing:.24em;color:var(--lav-dim)}
+  .overlay .ov-head h2{font-size:30px;font-weight:700;letter-spacing:.1em}
+  .overlay .ov-head span{font-size:16px;letter-spacing:.2em;color:var(--lav-dim)}
   .toc{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:26px}
   .toc-item{border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:16px 18px;cursor:pointer;
     transition:.22s;display:flex;gap:14px;align-items:baseline;background:rgba(255,255,255,.02)}
   .toc-item:hover{border-color:rgba(203,208,255,.45);background:rgba(203,208,255,.07);transform:translateY(-2px)}
   .toc-item.cur{border-color:rgba(203,208,255,.55);background:rgba(203,208,255,.1)}
-  .toc-item .n{font-size:12px;color:var(--lav-dim);letter-spacing:.12em;font-variant-numeric:tabular-nums}
-  .toc-item .t{font-size:15px;font-weight:600;letter-spacing:.02em}
-  .ov-foot{margin-top:24px;font-size:11px;letter-spacing:.14em;color:rgba(255,255,255,.35)}
+  .toc-item .n{font-size:16px;color:var(--lav-dim);letter-spacing:.12em;font-variant-numeric:tabular-nums}
+  .toc-item .t{font-size:20px;font-weight:600;letter-spacing:.02em}
+  .ov-foot{margin-top:24px;font-size:16px;letter-spacing:.1em;color:rgba(255,255,255,.5)}
   .ov-foot b{color:rgba(255,255,255,.65);font-weight:600}
 
   /* ---------- 黑屏 ---------- */
   .blackout{position:absolute;inset:0;background:#000;z-index:25;opacity:0;visibility:hidden;transition:.3s;
     display:grid;place-items:center;cursor:pointer}
   .blackout.show{opacity:1;visibility:visible}
-  .blackout span{font-size:11px;letter-spacing:.3em;color:rgba(255,255,255,.18)}
+  .blackout span{font-size:16px;letter-spacing:.3em;color:rgba(255,255,255,.3)}
 
   /* ---------- 链接按钮 ---------- */
   .chip{display:inline-flex;align-items:center;gap:8px;margin-top:14px;
-    font-size:12.5px;color:var(--lav);text-decoration:none;letter-spacing:.03em;
-    border:1px solid rgba(203,208,255,.3);border-radius:999px;padding:7px 14px;transition:.22s;
+    font-size:16px;color:var(--lav);text-decoration:none;letter-spacing:.03em;
+    border:1px solid rgba(203,208,255,.3);border-radius:999px;padding:9px 16px;transition:.22s;
     background:rgba(203,208,255,.06)}
   .chip:hover{background:rgba(203,208,255,.16);border-color:rgba(203,208,255,.65);color:#fff}
-  .chip .arrow{font-size:11px;opacity:.8}
+  .chip .arrow{font-size:14px;opacity:.8}
 
   /* ---------- 页 2 历史 ---------- */
   .two-col{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:minmax(0,1fr);gap:32px;height:100%;align-items:center}
   .story{display:flex;gap:26px;align-items:center;height:auto;padding:26px}
   .story .fig{width:196px;height:268px;flex:none}
   .story .txt{flex:1;min-width:0}
-  .tag{font-size:10.5px;letter-spacing:.18em;color:var(--lav-dim);border:1px solid rgba(203,208,255,.24);
-    padding:4px 9px;border-radius:4px}
-  .story h3{font-size:22px;font-weight:700;margin:14px 0 10px}
-  .story p{font-size:13.5px;line-height:1.85;color:rgba(255,255,255,.72)}
+  .tag{font-size:16px;letter-spacing:.14em;color:var(--lav-dim);border:1px solid rgba(203,208,255,.24);
+    padding:5px 10px;border-radius:4px}
+  .story h3{font-size:26px;font-weight:700;margin:14px 0 10px}
+  .story p{font-size:20px;line-height:1.75;color:rgba(255,255,255,.8)}
   .story p em{font-style:normal;color:var(--lav)}
   .story p strong{color:#fff}
 
   /* ---------- 页 3 折射 ---------- */
   .lens-row{display:grid;grid-template-columns:310px 310px 1fr;grid-template-rows:180px;gap:24px;height:180px}
   .lens-card{display:flex;flex-direction:column;justify-content:center;gap:14px;padding:20px 24px;overflow:hidden}
-  .lens-card .nm{font-size:20px;font-weight:700}
-  .lens-card .nm::after{content:"";display:block;width:26px;height:1px;background:var(--lav);margin-top:9px;opacity:.8}
-  .lens-card .fm{font-size:12.5px;line-height:1.9;color:rgba(255,255,255,.62);letter-spacing:.02em}
+  .lens-card .nm{font-size:24px;font-weight:700}
+  .lens-card .nm::after{content:"";display:block;width:30px;height:2px;background:var(--lav);margin-top:9px;opacity:.8}
+  .lens-card .fm{font-size:20px;line-height:1.7;color:rgba(255,255,255,.78);letter-spacing:.02em}
   .lens-card .fm b{color:var(--lav);font-weight:600;margin:0 2px}
   .split{display:grid;grid-template-columns:1.15fr 1fr 1.1fr;grid-template-rows:210px;gap:24px;height:210px;margin-top:20px}
   .problem{display:flex;flex-direction:column;justify-content:center;padding:22px 26px}
@@ -193,17 +193,17 @@
   .three{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:minmax(0,1fr);gap:24px;height:100%}
   .tile{display:flex;flex-direction:column;padding:20px;overflow:hidden}
   .tile .fig{height:186px;flex:none;margin-bottom:18px}
-  .tile h3{font-size:19px;display:flex;align-items:center;gap:9px}
-  .tile h3 .idx{font-size:11px;color:var(--lav-dim);font-weight:600;letter-spacing:.1em}
-  .tile p{font-size:13px;line-height:1.76}
+  .tile h3{font-size:22px;display:flex;align-items:center;gap:9px}
+  .tile h3 .idx{font-size:16px;color:var(--lav-dim);font-weight:600;letter-spacing:.1em}
+  .tile p{font-size:21px;line-height:1.6}
   .tile .chip{align-self:flex-start}
 
   /* ---------- 页 5 折反射 / 竖排卡片 ---------- */
   .side{display:grid;grid-template-columns:600px 1fr;grid-template-rows:minmax(0,1fr);gap:40px;height:100%}
   .stack{display:flex;flex-direction:column;gap:16px;justify-content:center}
   .stack .card{display:flex;gap:18px;align-items:flex-start;padding:20px 24px}
-  .stack h3{font-size:17px;white-space:nowrap}
-  .stack p{margin-top:6px;font-size:13px;line-height:1.72}
+  .stack h3{font-size:22px;white-space:nowrap}
+  .stack p{margin-top:6px;font-size:21px;line-height:1.6}
   .icon{width:42px;height:42px;flex:none;border-radius:10px;border:1px solid rgba(203,208,255,.22);
     display:grid;place-items:center;background:rgba(203,208,255,.07)}
   .icon svg{width:20px;height:20px;stroke:var(--lav);fill:none;stroke-width:1.5}
@@ -212,9 +212,9 @@
   .duo{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:minmax(0,1fr);gap:32px;height:100%}
   .duo .figure{height:100%}
   .duo .fig{flex:1;min-height:0}
-  .duo h3{font-size:16px;font-weight:700;margin-bottom:8px}
-  .duo p{font-size:13px;line-height:1.8;color:rgba(255,255,255,.7)}
-  .lead{position:absolute;left:64px;right:64px;top:180px;font-size:13px;letter-spacing:.06em;color:rgba(255,255,255,.5)}
+  .duo h3{font-size:22px;font-weight:700;margin-bottom:8px}
+  .duo p{font-size:21px;line-height:1.6;color:rgba(255,255,255,.8)}
+  .lead{position:absolute;left:64px;right:64px;top:180px;font-size:18px;letter-spacing:.06em;color:rgba(255,255,255,.5)}
   .lead em{font-style:normal;color:var(--lav)}
 
   /* ---------- 页 8-10 / 13 列表 ---------- */
@@ -222,19 +222,19 @@
   .rows{display:flex;flex-direction:column;justify-content:center}
   .row{display:flex;gap:18px;padding:13px 0;border-bottom:1px solid rgba(255,255,255,.075)}
   .row:last-child{border-bottom:none}
-  .row .n{font-size:20px;font-weight:700;color:var(--lav);opacity:.8;line-height:1.3;width:32px;flex:none;font-variant-numeric:tabular-nums}
-  .row h3{font-size:16px;font-weight:700;letter-spacing:.02em}
-  .row p{font-size:13px;line-height:1.72;color:rgba(255,255,255,.66);margin-top:4px}
+  .row .n{font-size:28px;font-weight:700;color:var(--lav);opacity:.8;line-height:1.3;width:40px;flex:none;font-variant-numeric:tabular-nums}
+  .row h3{font-size:22px;font-weight:700;letter-spacing:.02em}
+  .row p{font-size:21px;line-height:1.55;color:rgba(255,255,255,.78);margin-top:4px}
   .stat{position:absolute;right:16px;bottom:16px;text-align:right;z-index:2}
-  .stat b{font-size:30px;font-weight:700;color:#fff;letter-spacing:.02em;text-shadow:0 2px 20px #000}
-  .stat span{display:block;font-size:10.5px;letter-spacing:.18em;color:var(--lav);margin-top:2px}
+  .stat b{font-size:38px;font-weight:700;color:#fff;letter-spacing:.02em;text-shadow:0 2px 20px #000}
+  .stat span{display:block;font-size:16px;letter-spacing:.16em;color:var(--lav);margin-top:2px}
 
   /* ---------- 页 11 四宫格 ---------- */
   .quad{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(2,minmax(0,1fr));gap:20px;height:100%}
   .quad .card{display:flex;gap:20px;align-items:center;padding:24px 26px}
   .quad .icon{width:46px;height:46px}
-  .quad h3{font-size:18px;margin-bottom:8px}
-  .quad p{font-size:13px;line-height:1.75;margin-top:0}
+  .quad h3{font-size:22px;margin-bottom:8px}
+  .quad p{font-size:21px;line-height:1.6;margin-top:0}
 
   /* ---------- 页 12 时间线 ---------- */
   .tl{position:absolute;left:64px;right:64px;top:264px;bottom:70px;display:grid;grid-template-columns:repeat(4,1fr);gap:26px}
@@ -247,18 +247,18 @@
     background:var(--lav);transform:translateX(-50%);box-shadow:0 0 14px rgba(203,208,255,.9)}
   .tl-item .dot::after{content:"";position:absolute;left:50%;top:50%;width:26px;height:26px;
     transform:translate(-50%,-50%);border:1px solid rgba(203,208,255,.35);border-radius:50%}
-  .tl-item .yr{font-size:10.5px;letter-spacing:.18em;color:var(--lav-dim);margin-bottom:12px}
-  .tl-item h3{font-size:16px;font-weight:700;line-height:1.5}
-  .tl-item p{font-size:12px;line-height:1.85;color:rgba(255,255,255,.62);margin-top:10px}
+  .tl-item .yr{font-size:16px;letter-spacing:.16em;color:var(--lav-dim);margin-bottom:12px}
+  .tl-item h3{font-size:22px;font-weight:700;line-height:1.5}
+  .tl-item p{font-size:20px;line-height:1.7;color:rgba(255,255,255,.78);margin-top:10px}
 
   /* ---------- 页 14 结束 ---------- */
   .end-inner{position:absolute;left:0;right:0;top:214px;text-align:center;z-index:2}
-  .end-inner .big{font-size:70px;font-weight:700;letter-spacing:.26em;text-indent:.26em;
+  .end-inner .big{font-size:90px;font-weight:700;letter-spacing:.24em;text-indent:.24em;
     text-shadow:0 8px 60px rgba(120,140,255,.5)}
-  .end-inner .cn{font-size:22px;letter-spacing:.34em;color:var(--lav);margin-top:18px;text-indent:.34em}
-  .end-inner .meta{font-size:12px;letter-spacing:.2em;color:rgba(255,255,255,.42);margin-top:34px}
+  .end-inner .cn{font-size:30px;letter-spacing:.3em;color:var(--lav);margin-top:18px;text-indent:.3em}
+  .end-inner .meta{font-size:17px;letter-spacing:.18em;color:rgba(255,255,255,.55);margin-top:34px}
   .end-tags{position:absolute;left:0;right:0;bottom:120px;z-index:2;display:flex;justify-content:center;gap:14px}
-  .end-tags span{font-size:11px;letter-spacing:.14em;color:rgba(255,255,255,.55);
+  .end-tags span{font-size:16px;letter-spacing:.12em;color:rgba(255,255,255,.65);
     border:1px solid rgba(203,208,255,.2);border-radius:999px;padding:8px 16px}
 </style>
 </head>
@@ -296,7 +296,7 @@
             <div class="txt">
               <span class="tag">1608 · 荷兰</span>
               <h3>第一架望远镜</h3>
-              <p>荷兰眼镜商<em>汉斯·利珀希</em>偶然发现，采用凸透镜与凹透镜组合，能将远处的物体放大 <strong>3 倍</strong>。</p>
+              <p>荷兰眼镜商<em>汉斯·利珀希</em>发现：凸透镜 + 凹透镜，可放大 <strong>3 倍</strong>。</p>
             </div>
           </article>
           <article class="card story build" data-build="2">
@@ -304,7 +304,7 @@
             <div class="txt">
               <span class="tag">1609 · 伽利略</span>
               <h3>伽利略的改进</h3>
-              <p>伽利略将倍数提升至 <strong>30 倍</strong>，从而首次实现对<em>月球环形山、木星卫星</em>等天体的颠覆性观测。</p>
+              <p>伽利略把倍数提到 <strong>30 倍</strong>，首次看清<em>月球环形山</em>和<em>木星卫星</em>。</p>
             </div>
           </article>
         </div>
@@ -323,7 +323,7 @@
         <div class="lens-row">
           <div class="card lens-card build" data-build="1">
             <div class="nm">伽利略式</div>
-            <div class="fm"><span>凸透镜</span> 物镜 <b>+</b> <span>凹透镜</span> 目镜</div>
+            <div class="fm"><span>物镜：</span>凸透镜<br><span>目镜：</span>凹透镜</div>
           </div>
           <div class="card lens-card build" data-build="1">
             <div class="nm">开普勒式</div>
@@ -331,21 +331,19 @@
           </div>
           <figure class="figure build" data-build="1">
             <div class="fig plate"><img src="assets/image6.png" alt="双筒望远镜"></div>
-            <div class="cap">折射式结构 · 双筒望远镜</div>
           </figure>
         </div>
         <div class="split">
           <div class="card problem build" data-build="2">
             <h3>色差问题</h3>
-            <p>不同颜色的光在玻璃中的折射率不同，蓝光偏折更多、红光更少，焦点无法重合，图像边缘便出现彩色条纹。</p>
+            <p>各色光折射率不同，焦点无法重合，图像边缘出现彩色条纹。</p>
           </div>
           <figure class="figure build" data-build="2">
             <div class="fig"><img src="assets/image7.png" alt="色差导致的彩色边缘"></div>
-            <div class="cap">同一建筑：正常成像 / 带色差的成像</div>
+            <div class="cap">左：正常成像　右：带色差</div>
           </figure>
           <figure class="figure build" data-build="3">
             <div class="fig plate"><img src="assets/image10.png" alt="焦点处色散示意"></div>
-            <div class="cap">焦点处色散：不同色光焦点分离</div>
           </figure>
         </div>
       </div>
@@ -364,17 +362,17 @@
           <article class="tile card build" data-build="1">
             <div class="fig plate"><img src="assets/image11.jpeg" alt="牛顿式反射望远镜"></div>
             <h3><span class="idx">01</span>牛顿望远镜</h3>
-            <p>牛顿用<em>凹面镜</em>替代透镜收集光线，从根本上消除了色差问题。</p>
+            <p>用<em>凹面镜</em>收集光线，没有色差。</p>
           </article>
           <article class="tile card build" data-build="2">
             <div class="fig"><img src="assets/image9.png" alt="棱镜色散"></div>
             <h3><span class="idx">02</span>光的反射</h3>
-            <p>光碰到物体表面，被弹回原来物质里继续传播，这种现象叫做<strong>光的反射</strong>。</p>
+            <p>光碰到表面被弹回，继续传播——这就是<strong>光的反射</strong>。</p>
           </article>
           <article class="tile card build" data-build="3">
             <div class="fig plate"><img src="assets/image10.png" alt="焦点处色散"></div>
             <h3><span class="idx">03</span>色差问题</h3>
-            <p>与透镜不同，反射镜不会因色散产生色差，确保观察到的天体色彩真实。</p>
+            <p>反射镜无色差，天体颜色更真实。</p>
             <a class="chip" href="https://phet.colorado.edu/sims/html/geometric-optics/latest/geometric-optics_all.html?locale=zh_CN" target="_blank" rel="noopener">PhET 几何光学模拟 <span class="arrow">↗</span></a>
           </article>
         </div>
@@ -394,20 +392,19 @@
           <div class="stack">
             <article class="card build" data-build="1">
               <div class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><ellipse cx="12" cy="12" rx="10" ry="5.2"/><ellipse cx="12" cy="12" rx="5.2" ry="10"/></svg></div>
-              <div><h3>设计理念</h3><p>巧妙融合折射与反射原理，克服单一类型望远镜的局限，实现更高效能。</p></div>
+              <div><h3>设计理念</h3><p>折射 + 反射，突破单一结构的局限。</p></div>
             </article>
             <article class="card build" data-build="2">
               <div class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4.4"/><path d="M12 4v3M12 17v3M4 12h3M17 12h3"/></svg></div>
-              <div><h3>结构特性</h3><p>采用主镜与次镜组合，辅以透镜组，有效减少色差与球差，提升图像质量。</p></div>
+              <div><h3>结构特性</h3><p>主镜、次镜加透镜组，减少色差与球差。</p></div>
             </article>
             <article class="card build" data-build="3">
               <div class="icon"><svg viewBox="0 0 24 24"><path d="M6 18a9 9 0 0 1 12 0"/><path d="M3 18h18"/><circle cx="12" cy="8" r="2.4"/></svg></div>
-              <div><h3>便携与多功能</h3><p>结构紧凑，便于携带，适用于多种观测环境，满足专业与业余观测需求。</p></div>
+              <div><h3>便携与多功能</h3><p>结构紧凑，便于携带，适用范围更广。</p></div>
             </article>
           </div>
           <figure class="figure build" data-build="2">
             <div class="fig plate"><img src="assets/image15.png" alt="折反射望远镜"></div>
-            <div class="cap">折反射式天文望远镜 · 主镜与透镜组合</div>
           </figure>
         </div>
       </div>
@@ -426,16 +423,14 @@
           <figure class="figure build" data-build="1">
             <div class="fig"><img src="assets/image16.png" alt="黑洞照片"></div>
             <div>
-              <p>天体不只发出可见光，很多重要信息藏在<strong>看不见的电磁波</strong>里。</p>
+              <p>黑洞的第一张照片，来自<strong>射电波段</strong>，而不是可见光。</p>
             </div>
-            <div class="cap">事件视界望远镜拍摄的黑洞 · 靠射电波段成像</div>
           </figure>
           <figure class="figure build" data-build="2">
             <div class="fig plate"><img src="assets/image17.png" alt="电磁波谱"></div>
             <div>
-              <p>地球大气会挡住一部分可见光以外的辐射，所以要造<strong>不同波段</strong>的望远镜去接收。</p>
+              <p>可见光只占极窄一段，<br>所以要造<strong>不同波段</strong>的望远镜。</p>
             </div>
-            <div class="cap">电磁波谱：可见光只占极窄的一段（约 400–700 nm）</div>
           </figure>
         </div>
       </div>
@@ -454,16 +449,15 @@
           <figure class="figure build" data-build="1">
             <div class="fig"><img src="assets/image19.png" alt="创生之柱"></div>
             <div>
-              <h3>太空望远镜的宇宙揭秘</h3>
-              <p>太空望远镜揭示了宇宙膨胀的秘密，拍摄了深空最遥远的星系，改变了我们对宇宙的认知。</p>
-              <div class="cap" style="margin-top:8px">韦布空间望远镜 · 创生之柱</div>
+              <h3>韦布望远镜 · 创生之柱</h3>
+              <p>拍到最遥远的星系，揭示宇宙膨胀的秘密。</p>
             </div>
           </figure>
           <figure class="figure build" data-build="2">
             <div class="fig"><img src="assets/image18.png" alt="太阳与黑子"></div>
             <div>
               <h3>太阳黑子的观测</h3>
-              <p>地面望远镜捕捉太阳黑子活动，帮助科学家理解太阳磁场变化，预测太阳风暴对地球的影响。</p>
+              <p>追踪太阳黑子，理解磁场变化，预警太阳风暴。</p>
               <a class="chip" href="https://stellarium-web.org/" target="_blank" rel="noopener">Stellarium 实时星空 <span class="arrow">↗</span></a>
             </div>
           </figure>
@@ -482,14 +476,13 @@
       <div class="body">
         <div class="list-side">
           <div class="rows">
-            <div class="row build" data-build="1"><div class="n">01</div><div><h3>揭示宇宙奥秘</h3><p>望远镜是探索宇宙深处的眼睛，捕捉遥远星系的微弱光芒，揭示宇宙的起源、结构和演化。</p></div></div>
-            <div class="row build" data-build="2"><div class="n">02</div><div><h3>观测恒星生命周期</h3><p>观察恒星从诞生到死亡的全过程，理解内部核反应机制及其对银河系化学元素的影响。</p></div></div>
-            <div class="row build" data-build="3"><div class="n">03</div><div><h3>探测暗物质与暗能量</h3><p>现代望远镜技术使科学家能够间接探测到暗物质和暗能量的存在，这是解开宇宙加速膨胀之谜的关键。</p></div></div>
-            <div class="row build" data-build="4"><div class="n">04</div><div><h3>预测天文现象</h3><p>通过对历史数据的分析，预测日食、彗星回归等天文事件，增进人类对自然规律的理解。</p></div></div>
+            <div class="row build" data-build="1"><div class="n">01</div><div><h3>揭示宇宙奥秘</h3><p>捕捉遥远星系的微光，追问宇宙的起源。</p></div></div>
+            <div class="row build" data-build="2"><div class="n">02</div><div><h3>观测恒星生命周期</h3><p>看恒星从诞生到死亡，读懂核反应。</p></div></div>
+            <div class="row build" data-build="3"><div class="n">03</div><div><h3>探测暗物质与暗能量</h3><p>间接“看见”暗物质，破解加速膨胀之谜。</p></div></div>
+            <div class="row build" data-build="4"><div class="n">04</div><div><h3>预测天文现象</h3><p>用历史数据预测日食、彗星回归。</p></div></div>
           </div>
           <figure class="figure build" data-build="1">
             <div class="fig"><img src="assets/image20.png" alt="星云与星团"></div>
-            <div class="cap">深空星云 · 望远镜累积曝光下的宇宙</div>
           </figure>
         </div>
       </div>
@@ -500,22 +493,21 @@
       <div class="bg-strip"><img src="assets/image3.jpeg" alt=""></div>
       <header class="head">
         <div class="eyebrow enter" style="--d:.05s">08 / 中国天眼</div>
-        <h2 class="enter sm" style="--d:.14s">FAST 射电望远镜的建造历程与科学价值</h2>
+        <h2 class="enter sm" style="--d:.14s">FAST 射电望远镜：中国天眼</h2>
         <div class="rule enter" style="--d:.3s"></div>
       </header>
       <div class="body">
         <div class="list-side">
           <div class="rows">
-            <div class="row build" data-build="1"><div class="n">01</div><div><h3>选址与挑战</h3><p>位于贵州喀斯特洼坑，自然地形提供支撑，但需克服地质复杂、气候多变等难题。</p></div></div>
-            <div class="row build" data-build="2"><div class="n">02</div><div><h3>技术创新</h3><p>采用主动反射面技术，实现高精度天线面形调整，大幅提高观测灵敏度。</p></div></div>
-            <div class="row build" data-build="3"><div class="n">03</div><div><h3>科学使命</h3><p>探索宇宙起源、脉冲星搜索、引力波探测等领域，推动天文学前沿研究。</p></div></div>
-            <div class="row build" data-build="4"><div class="n">04</div><div><h3>国际影响</h3><p>作为世界最大单口径射电望远镜，提升了中国在国际天文学界的地位和影响力。</p></div></div>
+            <div class="row build" data-build="1"><div class="n">01</div><div><h3>选址与挑战</h3><p>喀斯特洼坑天然成型，工程难度极高。</p></div></div>
+            <div class="row build" data-build="2"><div class="n">02</div><div><h3>技术创新</h3><p>主动反射面实时调整面形，灵敏度极高。</p></div></div>
+            <div class="row build" data-build="3"><div class="n">03</div><div><h3>科学使命</h3><p>搜寻脉冲星、探测引力波、研究宇宙起源。</p></div></div>
+            <div class="row build" data-build="4"><div class="n">04</div><div><h3>国际影响</h3><p>世界最大单口径，显著提升中国天文地位。</p></div></div>
           </div>
           <figure class="figure build" data-build="1">
             <div class="fig"><img src="assets/image21.png" alt="FAST 中国天眼">
               <div class="stat"><b>500 m</b><span>世界最大单口径</span></div>
             </div>
-            <div class="cap">贵州平塘 · 500 米口径球面射电望远镜</div>
           </figure>
         </div>
       </div>
@@ -526,20 +518,19 @@
       <div class="bg-strip"><img src="assets/image3.jpeg" alt=""></div>
       <header class="head">
         <div class="eyebrow enter" style="--d:.05s">09 / 光谱巡天</div>
-        <h2 class="enter sm" style="--d:.14s">郭守敬望远镜（LAMOST）的技术特点与科学贡献</h2>
+        <h2 class="enter sm" style="--d:.14s">郭守敬望远镜 LAMOST</h2>
         <div class="rule enter" style="--d:.3s"></div>
       </header>
       <div class="body">
         <div class="list-side">
           <div class="rows">
-            <div class="row build" data-build="1"><div class="n">01</div><div><h3>独特设计</h3><p>4 米主镜与 1.2 米副镜，拥有 4000 个可调光纤，实现大视场光谱观测，刷新天文观测效率记录。</p></div></div>
-            <div class="row build" data-build="2"><div class="n">02</div><div><h3>海量光谱数据采集</h3><p>每晚可观测近 4000 个天体，累计获取数百万条高质量光谱，为银河系结构研究提供宝贵资料。</p></div></div>
-            <div class="row build" data-build="3"><div class="n">03</div><div><h3>科学成果丰硕</h3><p>助力发现新恒星、星团及银河系暗物质分布，推动宇宙学、恒星物理等多领域前沿研究。</p></div></div>
-            <div class="row build" data-build="4"><div class="n">04</div><div><h3>国际合作与共享</h3><p>数据对全球科研人员开放，促进国际天文合作，提升中国在天文学界的影响力。</p></div></div>
+            <div class="row build" data-build="1"><div class="n">01</div><div><h3>独特设计</h3><p>4 米主镜 + 4000 个可调光纤，大视场巡天。</p></div></div>
+            <div class="row build" data-build="2"><div class="n">02</div><div><h3>海量光谱数据</h3><p>每晚约 4000 个天体，累计数百万条光谱。</p></div></div>
+            <div class="row build" data-build="3"><div class="n">03</div><div><h3>科学成果丰硕</h3><p>发现新恒星与星团，描绘银河系结构。</p></div></div>
+            <div class="row build" data-build="4"><div class="n">04</div><div><h3>国际合作与共享</h3><p>数据全球开放共享，提升国际影响力。</p></div></div>
           </div>
           <figure class="figure build" data-build="1">
             <div class="fig"><img src="assets/image22.png" alt="LAMOST 观测站"></div>
-            <div class="cap">河北兴隆 · 郭守敬望远镜（LAMOST）</div>
           </figure>
         </div>
       </div>
@@ -550,26 +541,26 @@
       <div class="bg-strip"><img src="assets/image3.jpeg" alt=""></div>
       <header class="head">
         <div class="eyebrow enter" style="--d:.05s">10 / 走向太空</div>
-        <h2 class="enter" style="--d:.14s">中国空间望远镜项目的进展与展望</h2>
+        <h2 class="enter" style="--d:.14s">中国空间望远镜</h2>
         <div class="rule enter" style="--d:.3s"></div>
       </header>
       <div class="body">
         <div class="quad">
           <article class="card build" data-build="1">
             <div class="icon"><svg viewBox="0 0 24 24"><rect x="3.5" y="9" width="9" height="6" rx="1.2"/><circle cx="16.5" cy="12" r="4"/><path d="M8 9V5.5M8 15v3.5"/></svg></div>
-            <div><h3>项目概述</h3><p>中国空间站光学舱搭载的空间望远镜，旨在实现全天候、全波段的宇宙观测，推动天文学前沿研究。</p></div>
+            <div><h3>项目概述</h3><p>空间站光学舱搭载，实现全天候、全波段观测。</p></div>
           </article>
           <article class="card build" data-build="2">
             <div class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="7.5"/><path d="M12 4.5v3M12 16.5v3M4.5 12h3M16.5 12h3"/><circle cx="12" cy="12" r="2"/></svg></div>
-            <div><h3>关键技术</h3><p>采用先进光学系统与高灵敏探测器，突破空间环境下的稳定运行难题，确保高质量数据采集。</p></div>
+            <div><h3>关键技术</h3><p>先进光学系统 + 高灵敏探测器，稳定运行。</p></div>
           </article>
           <article class="card build" data-build="3">
             <div class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1"/></svg></div>
-            <div><h3>科学目标</h3><p>探索暗物质、暗能量之谜，研究星系演化，寻找外星生命迹象，拓展人类对宇宙的认知边界。</p></div>
+            <div><h3>科学目标</h3><p>探索暗物质暗能量，寻找地外生命迹象。</p></div>
           </article>
           <article class="card build" data-build="4">
             <div class="icon"><svg viewBox="0 0 24 24"><path d="M12 20V8"/><path d="M7 12l5-5 5 5"/><path d="M4 20h16"/></svg></div>
-            <div><h3>未来展望</h3><p>计划在未来十年内发射，预期将揭示宇宙深层次奥秘，引领全球天文学研究新方向。</p></div>
+            <div><h3>未来展望</h3><p>计划十年内发射，引领全球天文研究。</p></div>
           </article>
         </div>
       </div>
@@ -589,25 +580,25 @@
           <i class="dot"></i>
           <div class="yr">17 世纪 · 起源</div>
           <h3>起源与早期发展</h3>
-          <p>望远镜起源于 17 世纪初，伽利略改进荷兰的望远镜，首次将它指向天空，开启了天文学的新纪元。</p>
+          <p>伽利略把望远镜指向天空，天文学从此改变。</p>
         </article>
         <article class="tl-item build" data-build="3">
           <i class="dot"></i>
           <div class="yr">技术演进</div>
           <h3>光学结构的革新</h3>
-          <p>从折射到反射，再到折反射，望远镜技术不断革新，每一次进步都极大地扩展了人类对宇宙的认知边界。</p>
+          <p>折射、反射到折反射，视野一次次被打开。</p>
         </article>
         <article class="tl-item build" data-build="4">
           <i class="dot"></i>
           <div class="yr">20 世纪 · 突破</div>
           <h3>现代突破</h3>
-          <p>大型望远镜如凯克、哈勃等的出现，以及射电、红外等多波段观测技术的发展，标志着望远镜进入了全新时代。</p>
+          <p>凯克、哈勃与多波段观测，进入全新时代。</p>
         </article>
         <article class="tl-item build" data-build="5">
           <i class="dot"></i>
           <div class="yr">未来</div>
           <h3>未来展望</h3>
-          <p>未来的望远镜将拥有更高的分辨率和更大的探测范围，人类探索宇宙的视野将更加广阔。</p>
+          <p>更高分辨率、更大范围，望向宇宙深处。</p>
         </article>
       </div>
     </section>
@@ -623,13 +614,12 @@
       <div class="body">
         <div class="list-side">
           <div class="rows">
-            <div class="row build" data-build="1"><div class="n">01</div><div><h3>超大口径望远镜</h3><p>追求更大口径，以捕捉更微弱的宇宙信号，揭示宇宙早期的秘密。</p></div></div>
-            <div class="row build" data-build="2"><div class="n">02</div><div><h3>多波段观测融合</h3><p>整合可见光、红外、射电等多波段数据，实现全方位宇宙现象观测，提升研究深度。</p></div></div>
-            <div class="row build" data-build="3"><div class="n">03</div><div><h3>智能化观测系统</h3><p>采用 AI 技术优化望远镜操作，自动识别天体，提高观测效率与精度，开启智能天文新时代。</p></div></div>
+            <div class="row build" data-build="1"><div class="n">01</div><div><h3>超大口径望远镜</h3><p>口径更大，捕捉更微弱的宇宙信号。</p></div></div>
+            <div class="row build" data-build="2"><div class="n">02</div><div><h3>多波段观测融合</h3><p>可见光、红外、射电数据联合分析。</p></div></div>
+            <div class="row build" data-build="3"><div class="n">03</div><div><h3>智能化观测系统</h3><p>AI 自动识别天体，观测更快更准。</p></div></div>
           </div>
           <figure class="figure build" data-build="1">
             <div class="fig"><img src="assets/image27.png" alt="詹姆斯·韦布空间望远镜"></div>
-            <div class="cap">詹姆斯·韦布空间望远镜 · 下一代太空之眼</div>
           </figure>
         </div>
       </div>
